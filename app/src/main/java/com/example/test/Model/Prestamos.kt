@@ -19,9 +19,9 @@ import androidx.room.PrimaryKey
 data class Prestamos(
     @PrimaryKey(autoGenerate = true)
     val prestamo_id: Int = 0,
-    var monto: Double,
+    val monto: Double,
     var tasa_interes: Double,
-    var estado: String,
+    val plazo: Int,
     val user_id: Int
 
 )

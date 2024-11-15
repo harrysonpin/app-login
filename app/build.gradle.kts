@@ -53,6 +53,12 @@ android {
 
 dependencies {
 
+    implementation (libs.androidx.material3.v100alpha01)
+    implementation (libs.androidx.material.icons.core.v105)
+    implementation (libs.androidx.material.icons.extended.v105)
+    implementation (libs.androidx.material3.v110alpha05)
+
+
     implementation (libs.ui)
     implementation (libs.material3)
     implementation (libs.ui.tooling.preview)

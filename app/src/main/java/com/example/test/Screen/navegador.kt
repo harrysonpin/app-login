@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.test.Repository.*
 import androidx.compose.runtime.*
+
 import com.example.test.Model.User
 import kotlinx.coroutines.launch
 
@@ -24,10 +25,10 @@ fun navegador(
 
     NavHost(navController = navController, startDestination = "member_list") {
         composable("member_list") {
-            LoginScreen(navController, userRepository)
+            PantallaInicioSesion(navController, userRepository)
         }
-        composable("create_user") {
-            CreateUserScreen(navController, userRepository)
+        composable("crear_usuario") {
+            PantallaCrearUsuario(navController, userRepository)
         }
         composable("inicio/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
@@ -40,20 +41,35 @@ fun navegador(
             }
 
             user?.let {
-                InicioScreen(navController, it)
+                PantallaInicio(navController, it)
             }
         }
         composable("cuentas/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
-            CuentasScreen(navController, userId, cuentasRepository)
+            PantallaCuentas(navController, userId, cuentasRepository)
         }
         composable("tarjetas/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
-            TarjetasScreen(navController, userId, tarjetasRepository)
+            PantallaTarjetas(navController, userId, tarjetasRepository)
         }
         composable("prestamos/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
-            PrestamosScreen(navController, userId, prestamosRepository)
+            PantallaPrestamos(navController, userId, prestamosRepository)
+        }
+        composable("crear_cuenta/{userId}/{cuentaId?}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
+            val cuentaId = backStackEntry.arguments?.getString("cuentaId")?.toInt()
+            PantallaCrearcuentaBan(navController, cuentasRepository, userId, cuentaId)
+        }
+        composable("crear_tarjeta/{userId}/{tarjetaId?}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
+            val tarjetaId = backStackEntry.arguments?.getString("tarjetaId")?.toInt()
+            PantallaCrearTarjeta(navController, tarjetasRepository, userId, tarjetaId)
+        }
+        composable("crear_prestamo/{userId}/{prestamoId?}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
+            val prestamoId = backStackEntry.arguments?.getString("prestamoId")?.toInt()
+            PantallaCrearPrestamo(navController, prestamosRepository, userId, prestamoId)
         }
     }
 }

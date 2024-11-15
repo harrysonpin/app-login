@@ -19,6 +19,7 @@ data class Transacciones(
     var tipo_trasnsaccion: String,
     var monto:Double,
     var fecha: String,
-    val cuenta_id: Int
+    val cuenta_id: Int,
+    var estado : String
 
 )

@@ -4,7 +4,7 @@ import com.example.test.DAO.PrestamosDao
 import com.example.test.Model.Prestamos
 
 class PrestamosRepository(private val prestamosDao: PrestamosDao) {
-    suspend fun insertar(prestamo: Prestamos) {
+    suspend fun insertar(prestamo:Prestamos) {
         prestamosDao.insert(prestamo)
     }
 
