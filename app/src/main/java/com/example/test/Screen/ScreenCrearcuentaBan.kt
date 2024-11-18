@@ -1,35 +1,20 @@
 package com.example.test.Screen
 
-
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -37,101 +22,122 @@ import com.example.test.Model.Cuentas
 import com.example.test.Repository.CuentasRepository
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaCrearcuentaBan(
+fun PantallaCrearCuentaBancaria(
     navController: NavHostController,
     cuentasRepository: CuentasRepository,
-    userId: Int,
-    cuentaId: Int? = null
+    userId: Int
 ) {
+    val esTemaOscuro = isSystemInDarkTheme()
+    val colores = if (esTemaOscuro) {
+        darkColorScheme(
+            primary = Color(0xFF90CAF9),
+            secondary = Color(0xFF81D4FA),
+            background = Color(0xFF121212),
+            surface = Color(0xFF1E1E1E),
+            error = Color(0xFFCF6679)
+        )
+    } else {
+        lightColorScheme(
+            primary = Color(0xFF1976D2),
+            secondary = Color(0xFF03A9F4),
+            background = Color(0xFFFAFAFA),
+            surface = Color(0xFFFFFFFF),
+            error = Color(0xFFB00020)
+        )
+    }
+
     var tipoCuenta by remember { mutableStateOf("") }
     var saldoInicial by remember { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
     val ambito = rememberCoroutineScope()
 
-    LaunchedEffect(cuentaId) {
-        cuentaId?.let {
-            val cuenta = cuentasRepository.getCuentaById(it)
-            cuenta?.let {
-                tipoCuenta = it.tipo
-                saldoInicial = it.saldo.toString()
-            }
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(if (cuentaId == null) "Crear Cuenta" else "Editar Cuenta") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ),
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            OutlinedTextField(
-                value = tipoCuenta,
-                onValueChange = { tipoCuenta = it },
-                label = { Text("Nombre de la Cuenta") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            OutlinedTextField(
-                value = saldoInicial,
-                onValueChange = { saldoInicial = it },
-                label = { Text("Saldo Inicial") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(
-                onClick = {
-                    if (tipoCuenta.isNotEmpty() && saldoInicial.isNotEmpty()) {
-                        ambito.launch {
-                            val cuenta = Cuentas(
-                                tipo = tipoCuenta,
-                                saldo = saldoInicial.toDouble(),
-                                user_id = userId
-                            )
-                            if (cuentaId == null) {
-                                cuentasRepository.insertar(cuenta)
-                            } else {
-                                cuentasRepository.actualizar(cuenta.copy(cuenta_id = cuentaId))
-                            }
-                            navController.navigateUp()
+    MaterialTheme(colorScheme = colores) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Crear Cuenta Bancaria") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ),
+                    navigationIcon = {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                         }
-                    } else {
-                        error = true
                     }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(if (cuentaId == null) "Crear Cuenta" else "Guardar Cambios")
-            }
-            if (error) {
-                Text(
-                    text = "Por favor, complete todos los campos",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp)
                 )
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Nueva Cuenta Bancaria",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+
+                OutlinedTextField(
+                    value = tipoCuenta,
+                    onValueChange = { tipoCuenta = it },
+                    label = { Text("Nombre de Cuenta") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    leadingIcon = { Icon(Icons.Default.AccountBalance, contentDescription = "Nombre de cuenta") }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = saldoInicial,
+                    onValueChange = { saldoInicial = it.filter { char -> char.isDigit() } },
+                    label = { Text("Saldo Inicial") },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    shape = RoundedCornerShape(8.dp),
+                    leadingIcon = { Icon(Icons.Default.AttachMoney, contentDescription = "Icono de dinero") }
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(
+                    onClick = {
+                        if (tipoCuenta.isNotEmpty() && saldoInicial.isNotEmpty()) {
+                            ambito.launch {
+                                val cuenta = Cuentas(
+                                    tipo = tipoCuenta,
+                                    saldo = saldoInicial.toDoubleOrNull() ?: 0.0,
+                                    user_id = userId
+                                )
+                                cuentasRepository.insertar(cuenta)
+                                navController.navigateUp()
+                            }
+                        } else {
+                            error = true
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Crear cuenta")
+                    Spacer(Modifier.width(8.dp))
+                    Text("Crear Cuenta", modifier = Modifier.padding(vertical = 8.dp))
+                }
+                if (error) {
+                    Text(
+                        text = "Por favor, complete todos los campos",
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
-

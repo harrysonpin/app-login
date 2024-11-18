@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -53,7 +54,7 @@ fun PantallaInicio(
                     ),
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                         }
                     }
                 )
@@ -111,11 +112,7 @@ fun PantallaInicio(
                         icono = Icons.Default.AttachMoney,
                         onClick = { navController.navigate("prestamos/${user.user_id}") }
                     )
-                    BotonNavegacion(
-                        texto = "Métricas",
-                        icono = Icons.Default.BarChart,
-                        onClick = { navController.navigate("metricas/${user.user_id}") }
-                    )
+
                 }
             }
         }

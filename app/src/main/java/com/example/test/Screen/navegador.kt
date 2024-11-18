@@ -56,20 +56,17 @@ fun navegador(
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
             PantallaPrestamos(navController, userId, prestamosRepository)
         }
-        composable("crear_cuenta/{userId}/{cuentaId?}") { backStackEntry ->
+        composable("crear_cuenta/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
-            val cuentaId = backStackEntry.arguments?.getString("cuentaId")?.toInt()
-            PantallaCrearcuentaBan(navController, cuentasRepository, userId, cuentaId)
+            PantallaCrearCuentaBancaria(navController, cuentasRepository, userId)
         }
-        composable("crear_tarjeta/{userId}/{tarjetaId?}") { backStackEntry ->
+        composable("crear_tarjeta/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
-            val tarjetaId = backStackEntry.arguments?.getString("tarjetaId")?.toInt()
-            PantallaCrearTarjeta(navController, tarjetasRepository, userId, tarjetaId)
+            PantallaCrearTarjeta(navController, tarjetasRepository, userId)
         }
-        composable("crear_prestamo/{userId}/{prestamoId?}") { backStackEntry ->
+        composable("crear_prestamo/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toInt() ?: 0
-            val prestamoId = backStackEntry.arguments?.getString("prestamoId")?.toInt()
-            PantallaCrearPrestamo(navController, prestamosRepository, userId, prestamoId)
+            PantallaCrearPrestamo(navController, prestamosRepository, userId)
         }
     }
 }

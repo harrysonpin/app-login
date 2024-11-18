@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +21,7 @@ import com.example.test.Repository.PrestamosRepository
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.*
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +69,7 @@ fun PantallaPrestamos(
                     ),
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                         }
                     },
                     actions = {
@@ -88,7 +90,6 @@ fun PantallaPrestamos(
                 items(prestamos) { prestamo ->
                     TarjetaPrestamo(
                         prestamo = prestamo,
-                        onEditar = { navController.navigate("crear_prestamo/$userId/${prestamo.prestamo_id}") },
                         onEliminar = {
                             ambitoCorrutina.launch {
                                 prestamosRepository.eliminar(prestamo)
@@ -118,7 +119,6 @@ fun PantallaPrestamos(
 @Composable
 fun TarjetaPrestamo(
     prestamo: Prestamos,
-    onEditar: () -> Unit,
     onEliminar: () -> Unit
 ) {
     Card(
@@ -142,22 +142,14 @@ fun TarjetaPrestamo(
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = "Plazo: ${prestamo.plazo}",
+                text = "Plazo: ${prestamo.plazo} meses",
                 style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.End
             ) {
-                Button(
-                    onClick = onEditar,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) {
-                    Icon(Icons.Default.Edit, contentDescription = "Editar")
-                    Spacer(Modifier.width(4.dp))
-                    Text("Editar")
-                }
                 Button(
                     onClick = onEliminar,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
@@ -170,12 +162,11 @@ fun TarjetaPrestamo(
         }
     }
 }
-
 fun formatearMonto(monto: Double): String {
-    val formato = NumberFormat.getCurrencyInstance(Locale("es", "ES"))
+    val formato = NumberFormat.getCurrencyInstance(Locale("es", "CO"))
     return formato.format(monto)
 }
 
 fun formatearPorcentaje(tasa: Double): String {
-    return String.format("%.2f%%", tasa * 100)
+    return String.format("%.2f%%", tasa)
 }

@@ -6,10 +6,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -18,8 +18,6 @@ import androidx.navigation.NavHostController
 import com.example.test.Model.Cuentas
 import com.example.test.Repository.CuentasRepository
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +65,7 @@ fun PantallaCuentas(
                     ),
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                         }
                     },
                     actions = {
@@ -88,7 +86,6 @@ fun PantallaCuentas(
                 items(cuentas) { cuenta ->
                     TarjetaCuenta(
                         cuenta = cuenta,
-                        onEditar = { navController.navigate("crear_cuenta/$userId/${cuenta.cuenta_id}") },
                         onEliminar = {
                             ambitoCorrutina.launch {
                                 cuentasRepository.deleteCuenta(cuenta)
@@ -115,11 +112,9 @@ fun PantallaCuentas(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TarjetaCuenta(
     cuenta: Cuentas,
-    onEditar: () -> Unit,
     onEliminar: () -> Unit
 ) {
     Card(
@@ -147,14 +142,6 @@ fun TarjetaCuenta(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(
-                    onClick = onEditar,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) {
-                    Icon(Icons.Default.Edit, contentDescription = "Editar")
-                    Spacer(Modifier.width(4.dp))
-                    Text("Editar")
-                }
                 Button(
                     onClick = onEliminar,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)

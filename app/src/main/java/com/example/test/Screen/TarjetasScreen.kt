@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -67,7 +68,7 @@ fun PantallaTarjetas(
                     ),
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                         }
                     },
                     actions = {
@@ -88,7 +89,6 @@ fun PantallaTarjetas(
                 items(tarjetas) { tarjeta ->
                     TarjetaTarjeta(
                         tarjeta = tarjeta,
-                        onEditar = { navController.navigate("crear_tarjeta/$userId/${tarjeta.tarjeta_id}") },
                         onEliminar = {
                             ambitoCorrutina.launch {
                                 tarjetasRepository.eliminar(tarjeta)
@@ -115,11 +115,9 @@ fun PantallaTarjetas(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TarjetaTarjeta(
     tarjeta: Tarjetas,
-    onEditar: () -> Unit,
     onEliminar: () -> Unit
 ) {
     Card(
@@ -147,14 +145,7 @@ fun TarjetaTarjeta(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(
-                    onClick = onEditar,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                ) {
-                    Icon(Icons.Default.Edit, contentDescription = "Editar")
-                    Spacer(Modifier.width(4.dp))
-                    Text("Editar")
-                }
+
                 Button(
                     onClick = onEliminar,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
